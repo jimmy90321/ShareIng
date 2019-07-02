@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "368425860407",
+    "firebase_url": "https://shareing.firebaseio.com",
+    "project_id": "shareing",
+    "storage_bucket": "shareing.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368425860407:android:21334e9dbd5bd33c",
+        "android_client_info": {
+          "package_name": "jimmyliao.com.shareing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368425860407-n9oapddbb50ur9q8cc1k1jknp536dnrn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "jimmyliao.com.shareing",
+            "certificate_hash": "ebb34cd947c2db5587f18b1499273234421c6e8a"
+          }
+        },
+        {
+          "client_id": "368425860407-1al3iqsdsu934n7srsna5vl4uuu30qf5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeuUREU0r_IFShRi3XVv0BaSEekxB-d74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368425860407-1al3iqsdsu934n7srsna5vl4uuu30qf5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

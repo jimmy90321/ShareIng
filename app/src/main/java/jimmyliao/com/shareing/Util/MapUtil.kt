@@ -46,7 +46,7 @@ class MapUtil {
                     } else {
                         LatLng(1.299964, 103.843337)
                     }
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(moveTo,16.0f))
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(moveTo, 16.0f))
             }
         }
 
@@ -81,10 +81,11 @@ class MapUtil {
         }
     }
 
-    fun addMarkerOnMap(map:GoogleMap,solding: Solding) {
+    fun addMarkerOnMap(map: GoogleMap, solding: Solding) {
         val location = solding.location
         val markerOptions =
             MarkerOptions().position(LatLng(location!!.latitude, location.longitude)).title(solding.title)
-        map.addMarker(markerOptions)
+        val marker = map.addMarker(markerOptions)
+        marker.tag = solding
     }
 }

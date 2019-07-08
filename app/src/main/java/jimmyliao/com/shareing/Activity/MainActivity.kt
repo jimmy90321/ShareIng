@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
+import jimmyliao.com.shareing.Adapter.MyInfoWindowAdapter
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.MapUtil
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         db.collection("Solding").get().addOnSuccessListener { result ->
             for (document in result) {
                 val solding = document.toObject(Solding::class.java)
-                MapUtil().addMarkerOnMap(map,solding)
+                MapUtil().addMarkerOnMap(map, solding)
             }
         }
     }
@@ -55,9 +56,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map = googleMap!!
 
         map.uiSettings.isZoomControlsEnabled = true
+        map.setInfoWindowAdapter(MyInfoWindowAdapter(this@MainActivity))
         map.setOnMarkerClickListener(this)
 
-        MapUtil().setupMap(this@MainActivity,map)
+
+        MapUtil().setupMap(this@MainActivity, map)
     }
 
     override fun onMarkerClick(marker: Marker?) = false

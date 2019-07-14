@@ -1,20 +1,11 @@
 package jimmyliao.com.shareing.Activity
 
-import android.annotation.SuppressLint
-import android.content.IntentSender
-import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.util.Log
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
-import jimmyliao.com.shareing.Adapter.MyInfoWindowAdapter
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.MapUtil
@@ -55,9 +46,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             }
             dataReady = true
             if (mapReady) {
-                soldingList.forEach { solding ->
-                    mapUtil.addMarkerOnMap(map, solding)
-                }
+                mapUtil.setupClusterManager(map,soldingList)
             }
         }
 
@@ -73,10 +62,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         mapUtil.setupMap(this@MainActivity, map) {
             mapReady = it
-            if (dataReady) {
-                soldingList.forEach { solding ->
-                    mapUtil.addMarkerOnMap(map, solding)
-                }
+            if (mapReady && dataReady) {
+                mapUtil.setupClusterManager(map,soldingList)
             }
         }
     }

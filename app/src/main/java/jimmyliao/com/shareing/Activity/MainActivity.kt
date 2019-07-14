@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var db: FirebaseFirestore
+    private val mapUtil = MapUtil()
+    private val soldingList = mutableListOf<Solding>()
+    private var dataReady = false
+    private var mapReady = false
 
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
@@ -45,22 +49,36 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private fun initData() {
         db = FirebaseFirestore.getInstance()
         db.collection("Solding").get().addOnSuccessListener { result ->
-            for (document in result) {
+            result.forEach { document ->
                 val solding = document.toObject(Solding::class.java)
-                MapUtil().addMarkerOnMap(map, solding)
+                soldingList.add(solding)
+            }
+            dataReady = true
+            if (mapReady) {
+                soldingList.forEach { solding ->
+                    mapUtil.addMarkerOnMap(map, solding)
+                }
             }
         }
+
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
         map = googleMap!!
 
         map.uiSettings.isZoomControlsEnabled = true
-        map.setInfoWindowAdapter(MyInfoWindowAdapter(this@MainActivity))
+//        map.setInfoWindowAdapter(MyInfoWindowAdapter(this@MainActivity))
         map.setOnMarkerClickListener(this)
 
 
-        MapUtil().setupMap(this@MainActivity, map)
+        mapUtil.setupMap(this@MainActivity, map) {
+            mapReady = it
+            if (dataReady) {
+                soldingList.forEach { solding ->
+                    mapUtil.addMarkerOnMap(map, solding)
+                }
+            }
+        }
     }
 
     override fun onMarkerClick(marker: Marker?) = false

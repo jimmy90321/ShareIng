@@ -58,6 +58,7 @@ class MapUtil {
                         }
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 16.0f))
             }
+
         }
 
 
@@ -65,7 +66,7 @@ class MapUtil {
         setupReady(true)
     }
 
-    private fun askLocationService() {
+    fun askLocationService() {
 
         val locationRequest = LocationRequest.create()?.apply {
             interval = 10 * 1000
@@ -81,53 +82,29 @@ class MapUtil {
         }.addOnFailureListener {
             if (it is ResolvableApiException) {
                 try {
-                    it.startResolutionForResult(context as Activity, MainActivity.REQUEST_CHECK_SETTINGS)
+                    it.startResolutionForResult(context as Activity, MainActivity.REQUEST_LOCATION_CHECK_SETTINGS)
                 } catch (sendEx: IntentSender.SendIntentException) {
-
                 }
             }
         }
     }
 
-    fun addMarkerOnMap(map: GoogleMap, solding: Solding) {
-        val iconFactory = IconGenerator(context)
-        val contentView: View = (context as Activity).layoutInflater.inflate(R.layout.marker_solding, null)
-
-        contentView.tv_solding_title.text = solding.title
-        contentView.tv_solding_amount.text = solding.amount.toString()
-        contentView.tv_solding_unit.text = solding.unit
-        contentView.tv_solding_price.text = solding.price.toString()
-        iconFactory.setContentView(contentView)
-        val soldingLocation = LatLng(solding.location!!.latitude, solding.location.longitude)
-        val distance = SphericalUtil.computeDistanceBetween(lastLocation, soldingLocation)
-
-        when {
-            distance < 500 -> iconFactory.setStyle(IconGenerator.STYLE_BLUE)
-            distance > 1000 -> iconFactory.setStyle(IconGenerator.STYLE_RED)
-            else -> iconFactory.setStyle(IconGenerator.STYLE_ORANGE)
-        }
-
-        val markerOptions = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon()))
-            .position(soldingLocation)
-            .anchor(iconFactory.anchorU, iconFactory.anchorV)
-        map.addMarker(markerOptions)
-    }
-
     fun setupClusterManager(map: GoogleMap, list: MutableList<Solding>) {
         val clusterManager = ClusterManager<Solding>(context, map)
-        clusterManager.renderer = MyClusterRender(map,clusterManager)
+        clusterManager.renderer = MyClusterRender(map, clusterManager)
         map.setOnCameraIdleListener(clusterManager)
         clusterManager.addItems(list)
         clusterManager.cluster()
 
     }
 
-    private inner class MyClusterRender(val map:GoogleMap,clusterManager:ClusterManager<Solding>) : DefaultClusterRenderer<Solding>(context, map, clusterManager),ClusterManager.OnClusterClickListener<Solding>{
+    private inner class MyClusterRender(val map: GoogleMap, clusterManager: ClusterManager<Solding>) :
+        DefaultClusterRenderer<Solding>(context, map, clusterManager), ClusterManager.OnClusterClickListener<Solding> {
 
         val iconFactory = IconGenerator(context)
         val contentView: View = (context as Activity).layoutInflater.inflate(R.layout.marker_solding, null)
 
-        init{
+        init {
             iconFactory.setContentView(contentView)
         }
 
@@ -155,14 +132,14 @@ class MapUtil {
 
         override fun onClusterClick(cluster: Cluster<Solding>?): Boolean {
             val builder = LatLngBounds.builder()
-            for(item in cluster!!.items){
+            for (item in cluster!!.items) {
                 builder.include(item.position)
             }
             val bounds = builder.build()
 
-            try{
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,10))
-            }catch (e:Exception){
+            try {
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 10))
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
 

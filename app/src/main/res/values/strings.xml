@@ -1,3 +1,18 @@
 <resources>
+    // Toolbar title
     <string name="app_name">ShareIng</string>
+    <string name="text_title_add">Add new ingredient</string>
+
+    // Side Menu
+    <string name="text_open">Open</string>
+    <string name="text_close">Close</string>
+    <string name="text_menu_filter_with_conditions">Filter with conditions</string>
+    <string name="text_menu_favorite_sharer">Favorite sharer</string>
+    <string name="text_menu_login">Log in</string>
+
+    // Add Selling Activity
+    <string name="text_add_title_ingredient">Ingredient :</string>
+    <string name="text_add_title_measure">Measurement :</string>
+    <string name="text_add_title_unit">Unit :</string>
+    <string name="text_add_title_price">Price : S$</string>
 </resources>

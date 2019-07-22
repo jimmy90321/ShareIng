@@ -4,13 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Location
+import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.view.View
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -31,9 +30,12 @@ import java.lang.Exception
 class MapUtil {
     private lateinit var context: Context
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var lastLocation: LatLng
 
-    fun setupMap(context: Context, map: GoogleMap, setupReady: (Boolean) -> Unit) {
+    companion object {
+        var lastLocation = LatLng(1.299964, 103.843337)
+    }
+
+    fun setupMap(context: Context, map: GoogleMap, setupReady: (Boolean) -> Unit, onLocationUpdate:(Location)->Unit) {
         this.context = context
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
@@ -48,45 +50,41 @@ class MapUtil {
             )
             return
         } else {
-            askLocationService()
-            fusedLocationClient.lastLocation.addOnSuccessListener {
-                lastLocation =
-                        if (it != null) {
-                            LatLng(it.latitude, it.longitude)
-                        } else {
-                            LatLng(1.299964, 103.843337)
-                        }
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 16.0f))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 14.0f))
+
+            val locationRequest = LocationRequest.create()?.apply {
+                interval = 1 * 1000
+                fastestInterval = 5 * 100
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
+
+            val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest!!)
+            val client = LocationServices.getSettingsClient(context)
+            val task = client.checkLocationSettings(builder.build())
+
+            task.addOnFailureListener {
+                if (it is ResolvableApiException) {
+                    try {
+                        it.startResolutionForResult(context as Activity, MainActivity.REQUEST_LOCATION_CHECK_SETTINGS)
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                    }
+                }
+            }
+
+            fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
+                override fun onLocationResult(locationResult: LocationResult?) {
+                    if (locationResult != null) {
+                        onLocationUpdate(locationResult.lastLocation)
+                        lastLocation = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
+                    }
+                }
+            }, Looper.myLooper())
 
         }
 
 
         map.isMyLocationEnabled = true
         setupReady(true)
-    }
-
-    fun askLocationService() {
-
-        val locationRequest = LocationRequest.create()?.apply {
-            interval = 10 * 1000
-            fastestInterval = 5 * 1000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest!!)
-        val client = LocationServices.getSettingsClient(context)
-        val task = client.checkLocationSettings(builder.build())
-
-        task.addOnSuccessListener {
-        }.addOnFailureListener {
-            if (it is ResolvableApiException) {
-                try {
-                    it.startResolutionForResult(context as Activity, MainActivity.REQUEST_LOCATION_CHECK_SETTINGS)
-                } catch (sendEx: IntentSender.SendIntentException) {
-                }
-            }
-        }
     }
 
     fun setupClusterManager(map: GoogleMap, list: MutableList<Solding>) {

@@ -8,10 +8,12 @@ import android.support.v7.widget.Toolbar
 import android.view.Gravity
 import android.widget.ImageView
 import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.firebase.firestore.FirebaseFirestore
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
+import jimmyliao.com.shareing.Util.FirebaseUtil
 import jimmyliao.com.shareing.Util.MapUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -61,8 +63,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     private fun initData() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("Solding").get().addOnSuccessListener { result ->
+        FirebaseUtil().getCollectionData("Solding") { result ->
             result.forEach { document ->
                 val solding = document.toObject(Solding::class.java)
                 soldingList.add(solding)
@@ -72,7 +73,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 mapUtil.setupClusterManager(map, soldingList)
             }
         }
-
     }
 
     private fun initEvent() {
@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
+        var firstUpdated = false
         map = googleMap!!
 
         map.uiSettings.isZoomControlsEnabled = false
@@ -91,12 +92,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map.setOnMarkerClickListener(this)
 
 
-        mapUtil.setupMap(this@MainActivity, map) {
-            mapReady = it
-            if (mapReady && dataReady) {
-                mapUtil.setupClusterManager(map, soldingList)
-            }
-        }
+        mapUtil.setupMap(this@MainActivity, map,
+            setupReady = {
+                mapReady = it
+                if (mapReady && dataReady) {
+                    mapUtil.setupClusterManager(map, soldingList)
+                }
+            },
+            onLocationUpdate = {
+                if (!firstUpdated) {
+                    map.clear()
+                    mapUtil.setupClusterManager(map, soldingList)
+                    map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
+                    firstUpdated = true
+                }
+            })
     }
 
     override fun onMarkerClick(marker: Marker?) = false

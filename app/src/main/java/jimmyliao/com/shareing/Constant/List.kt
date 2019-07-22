@@ -2,5 +2,7 @@ package jimmyliao.com.shareing.Constant
 
 class List(){
 
-    val IngredientList = arrayListOf("Apple","Beef","Pork")
+    val IngredientList = mutableListOf("Apple","Beef","Pork")
+
+    val gramList = mutableListOf("mg","g","kg")
 }

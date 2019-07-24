@@ -1,16 +1,19 @@
 package jimmyliao.com.shareing.Model
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.maps.android.clustering.ClusterItem
 
-data class Solding (
+data class Solding(
+    val ref: DocumentReference? = null,
     val amount: Any? = null,
     val location: GeoPoint? = null,
     val price: Any? = null,
     val soldingTitle: String? = null,
-    val unit: String? = null
-):ClusterItem{
+    val unit: String? = null,
+    val providerRef: DocumentReference? = null
+) : ClusterItem {
     override fun getSnippet(): String? {
         return null
     }
@@ -20,7 +23,7 @@ data class Solding (
     }
 
     override fun getPosition(): LatLng {
-        return LatLng(location!!.latitude,location.longitude)
+        return LatLng(location!!.latitude, location.longitude)
     }
 
 }

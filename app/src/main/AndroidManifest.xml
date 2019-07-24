@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".Activity.AddSellingActivity">
         </activity>
+        <activity android:name=".Activity.SoldingDetailActiviy">
+        </activity>
     </application>
 
 </manifest>

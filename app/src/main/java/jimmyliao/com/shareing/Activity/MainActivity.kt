@@ -11,6 +11,8 @@ import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.firebase.firestore.FirebaseFirestore
+import jimmyliao.com.shareing.Constant.providerMap
+import jimmyliao.com.shareing.Constant.soldingMap
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.FirebaseUtil
@@ -67,9 +69,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             result.forEach { document ->
                 val solding = document.toObject(Solding::class.java)
                 soldingList.add(solding)
+//                val key = solding.soldingTitle
+//                soldingMap[key]?.add(solding) ?: soldingMap.put(key!!, mutableListOf(solding))
             }
             dataReady = true
             if (mapReady) {
+//                soldingMap.values.forEach { list ->
+//                    mapUtil.setupClusterManager(map, list)
+//                }
                 mapUtil.setupClusterManager(map, soldingList)
             }
         }
@@ -97,12 +104,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 mapReady = it
                 if (mapReady && dataReady) {
                     mapUtil.setupClusterManager(map, soldingList)
+//                    soldingMap.values.forEach { list ->
+//                        mapUtil.setupClusterManager(map, list)
+//                    }
                 }
             },
             onLocationUpdate = {
                 if (!firstUpdated) {
                     map.clear()
                     mapUtil.setupClusterManager(map, soldingList)
+//                    soldingMap.values.forEach { list ->
+//                        mapUtil.setupClusterManager(map, list)
+//                    }
                     map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
                     firstUpdated = true
                 }

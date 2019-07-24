@@ -11,7 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.google.firebase.firestore.GeoPoint
-import jimmyliao.com.shareing.Constant.List
+import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.BaseUtil
 import jimmyliao.com.shareing.Util.FirebaseUtil
@@ -41,7 +41,7 @@ class AddSellingActivity : AppCompatActivity() {
     }
 
     private fun setData() {
-        val ingredientListAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, List().IngredientList)
+        val ingredientListAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, IngredientList)
         ingredientListAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
         spinner_ingredient.adapter = ingredientListAdapter
         spinner_ingredient.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -51,7 +51,7 @@ class AddSellingActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val unitList = when (parent?.getItemAtPosition(position).toString()) {
-                    "Beef", "Pork" -> List().gramList
+                    "Beef", "Pork" -> gramList
                     else -> mutableListOf()
                 }
                 val unitListAdapter =

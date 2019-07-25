@@ -9,7 +9,6 @@ import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
-import android.util.Log
 import android.view.View
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -122,10 +121,9 @@ class MapUtil {
         }
 
         clusterManager.setOnClusterItemClickListener {
-            Log.d("test","on cluster item click")
             val id = it.ref?.id
             val bundle = Bundle()
-            bundle.putString("soldingId", id)
+            bundle.putString(SoldingDetailActiviy.ID, id)
             val intent = Intent(context, SoldingDetailActiviy::class.java)
             intent.putExtras(bundle)
             context.startActivity(intent)
@@ -134,7 +132,7 @@ class MapUtil {
     }
 
     private inner class MyClusterRender(map: GoogleMap, clusterManager: ClusterManager<Solding>) :
-        DefaultClusterRenderer<Solding>(context, map, clusterManager){
+        DefaultClusterRenderer<Solding>(context, map, clusterManager) {
 
         val iconFactory = IconGenerator(context)
         val contentView: View = (context as Activity).layoutInflater.inflate(R.layout.marker_solding, null)

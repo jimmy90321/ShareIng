@@ -1,13 +1,11 @@
 package jimmyliao.com.shareing.Util
 
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import jimmyliao.com.shareing.R
+import jimmyliao.com.shareing.Constant.providerMap
+import jimmyliao.com.shareing.Constant.provider_collectionName
+import jimmyliao.com.shareing.Model.Provider
 import java.lang.Exception
 
 class FirebaseUtil {
@@ -25,12 +23,7 @@ class FirebaseUtil {
         }
     }
 
-    fun addData(
-        collection: String,
-        documentId: String?,
-        data: Any,
-        onResult: (Boolean, Exception?) -> Unit
-    ) {
+    fun addData(collection: String, documentId: String?, data: Any, onResult: (Boolean, Exception?) -> Unit) {
 
         val documentRef = if (documentId != null) {
             db!!.collection(collection).document(documentId)
@@ -45,5 +38,24 @@ class FirebaseUtil {
             .addOnFailureListener {
                 onResult(false, it)
             }
+    }
+
+    fun getData(collection: String, documentIndex: Any, result: (Any) -> Unit) {
+        when (collection) {
+            provider_collectionName -> getProvider((documentIndex as DocumentReference), result)
+        }
+    }
+
+    private fun getProvider(documentRef: DocumentReference, result: (Any) -> Unit) {
+        if (providerMap[documentRef] != null) {
+            result(providerMap[documentRef]!!)
+        } else {
+            documentRef.get()
+                .addOnSuccessListener {
+                    val provider = it.toObject(Provider::class.java)
+                    providerMap[documentRef] = provider!!
+                    result(provider)
+                }
+        }
     }
 }

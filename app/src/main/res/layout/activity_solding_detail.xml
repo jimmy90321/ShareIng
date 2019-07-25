@@ -7,4 +7,114 @@
         android:layout_height="match_parent"
         tools:context=".Activity.SoldingDetailActiviy">
 
+    <include
+            android:id="@+id/detail_toolbar"
+            layout="@layout/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <android.support.constraint.Guideline
+            android:id="@+id/guideline_field_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.07"/>
+
+    <android.support.constraint.Guideline
+            android:id="@+id/guideline_field_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.93"/>
+
+    <TextView
+            android:id="@+id/tv_detail_ingredient_title"
+            style="@style/detail_title"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintTop_toBottomOf="@id/detail_toolbar"
+            android:text="@string/text_detail_ingredient_title"/>
+
+    <TextView
+            android:id="@+id/tv_detail_ingredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_ingredient_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_ingredient_title"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_ingredient_title"
+            android:layout_marginStart="8dp"/>
+
+    <TextView
+            android:id="@+id/tv_detail_amount_title"
+            style="@style/detail_title"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_ingredient"
+            android:text="@string/text_detail_amount_title"/>
+
+    <TextView
+            android:id="@+id/tv_detail_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_amount_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_amount_title"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_amount_title"
+            android:layout_marginStart="8dp"/>
+
+    <TextView
+            android:id="@+id/tv_detail_price_title"
+            style="@style/detail_title"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_amount"
+            android:text="@string/text_detail_price_title"/>
+
+    <TextView
+            android:id="@+id/tv_detail_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_price_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_price_title"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_price_title"
+            android:layout_marginStart="8dp"/>
+
+    <ImageView
+            android:id="@+id/iv_separator"
+            android:layout_width="0dp"
+            android:layout_height="1.5dp"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintEnd_toEndOf="@id/guideline_field_end"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_price"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/darker_gray"/>
+
+    <TextView
+            android:id="@+id/tv_detail_provider_title"
+            style="@style/detail_title"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintTop_toBottomOf="@id/iv_separator"
+            android:text="@string/text_detail_provider_title"/>
+
+    <TextView
+            android:id="@+id/tv_detail_provider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_provider_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_provider_title"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_provider_title"
+            android:layout_marginStart="8dp"/>
+
+    <TextView
+            android:id="@+id/tv_detail_phone_title"
+            style="@style/detail_title"
+            app:layout_constraintStart_toStartOf="@id/guideline_field_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_provider"
+            android:text="@string/text_detail_phone_title"/>
+
+    <TextView
+            android:id="@+id/tv_detail_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_phone_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_phone_title"
+            app:layout_constraintStart_toEndOf="@id/tv_detail_phone_title"
+            android:layout_marginStart="8dp"/>
+
 </android.support.constraint.ConstraintLayout>

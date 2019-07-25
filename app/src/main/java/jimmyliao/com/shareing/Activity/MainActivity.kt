@@ -3,29 +3,28 @@ package jimmyliao.com.shareing.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Gravity
+import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.Toast
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
-import com.google.firebase.firestore.FirebaseFirestore
-import jimmyliao.com.shareing.Constant.providerMap
-import jimmyliao.com.shareing.Constant.soldingMap
+import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.FirebaseUtil
 import jimmyliao.com.shareing.Util.MapUtil
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.drawer_header.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MainActivity : AppCompatActivity(), OnMapReadyCallback{
 
     private lateinit var map: GoogleMap
-    private lateinit var db: FirebaseFirestore
     private val mapUtil = MapUtil()
-    private val soldingList = mutableListOf<Solding>()
     private var dataReady = false
     private var mapReady = false
 
@@ -62,22 +61,40 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         btnCloseDrawer.setOnClickListener {
             drawer.closeDrawer(Gravity.LEFT, true)
         }
+
+        sidebar.setNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_filter -> {
+                    Toast.makeText(this, "filter click", Toast.LENGTH_SHORT).show()
+                }
+                R.id.menu_favor -> {
+                    Toast.makeText(this, "favor click", Toast.LENGTH_SHORT).show()
+                }
+                R.id.menu_login -> {
+                    Toast.makeText(this, "login click", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            return@setNavigationItemSelectedListener true
+        }
     }
 
     private fun initData() {
-        FirebaseUtil().getCollectionData("Solding") { result ->
+        FirebaseUtil().getCollectionData(solding_collectionName) { result ->
             result.forEach { document ->
-                val solding = document.toObject(Solding::class.java)
+                val solding = Solding(
+                    document.reference, document.get(solding_amount), document.getGeoPoint(
+                        solding_location
+                    ), document.get(solding_price), document.getString(solding_title), document.getString(
+                        solding_unit
+                    ), document.getDocumentReference(solding_provider)
+                )
                 soldingList.add(solding)
-//                val key = solding.soldingTitle
-//                soldingMap[key]?.add(solding) ?: soldingMap.put(key!!, mutableListOf(solding))
             }
+            filteredList = soldingList
             dataReady = true
             if (mapReady) {
-//                soldingMap.values.forEach { list ->
-//                    mapUtil.setupClusterManager(map, list)
-//                }
-                mapUtil.setupClusterManager(map, soldingList)
+                mapUtil.setupClusterManager(map, filteredList)
             }
         }
     }
@@ -96,31 +113,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map.uiSettings.isZoomControlsEnabled = false
         map.uiSettings.isMapToolbarEnabled = false
 
-        map.setOnMarkerClickListener(this)
-
-
         mapUtil.setupMap(this@MainActivity, map,
             setupReady = {
                 mapReady = it
                 if (mapReady && dataReady) {
-                    mapUtil.setupClusterManager(map, soldingList)
-//                    soldingMap.values.forEach { list ->
-//                        mapUtil.setupClusterManager(map, list)
-//                    }
+                    mapUtil.setupClusterManager(map, filteredList)
                 }
             },
             onLocationUpdate = {
                 if (!firstUpdated) {
                     map.clear()
-                    mapUtil.setupClusterManager(map, soldingList)
-//                    soldingMap.values.forEach { list ->
-//                        mapUtil.setupClusterManager(map, list)
-//                    }
+                    mapUtil.setupClusterManager(map, filteredList)
                     map.animateCamera(CameraUpdateFactory.newLatLng(LatLng(it.latitude, it.longitude)))
                     firstUpdated = true
                 }
             })
     }
-
-    override fun onMarkerClick(marker: Marker?) = false
 }

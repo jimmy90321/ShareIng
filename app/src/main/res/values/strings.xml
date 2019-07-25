@@ -2,6 +2,7 @@
     // Toolbar title
     <string name="app_name">ShareIng</string>
     <string name="text_title_add">Add new ingredient</string>
+    <string name="text_title_detail">Ingredient detail</string>
 
     // Side Menu
     <string name="text_open">Open</string>
@@ -16,4 +17,11 @@
     <string name="text_add_title_unit">Unit :</string>
     <string name="text_add_title_price">Price : S$</string>
     <string name="text_btn_add">Add</string>
+
+    // Solding Detail Activity
+    <string name="text_detail_ingredient_title">Ingredient :</string>
+    <string name="text_detail_amount_title">Amount :</string>
+    <string name="text_detail_price_title">Price :</string>
+    <string name="text_detail_provider_title">Provider :</string>
+    <string name="text_detail_phone_title">Phone :</string>
 </resources>

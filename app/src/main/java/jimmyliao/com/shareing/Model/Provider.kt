@@ -1,5 +1,3 @@
 package jimmyliao.com.shareing.Model
 
-import com.google.firebase.firestore.DocumentReference
-
-data class Provider(val name: String, val phone: String)
+data class Provider(val name: String? = null, val phone: String? = null)

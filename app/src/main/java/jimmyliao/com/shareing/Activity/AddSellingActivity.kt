@@ -13,9 +13,7 @@ import android.widget.Toast
 import com.google.firebase.firestore.GeoPoint
 import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.R
-import jimmyliao.com.shareing.Util.BaseUtil
-import jimmyliao.com.shareing.Util.FirebaseUtil
-import jimmyliao.com.shareing.Util.MapUtil
+import jimmyliao.com.shareing.Util.*
 import kotlinx.android.synthetic.main.activity_add_selling.*
 
 class AddSellingActivity : AppCompatActivity() {
@@ -34,7 +32,7 @@ class AddSellingActivity : AppCompatActivity() {
     }
 
     private fun setToolBar() {
-        setSupportActionBar((toolbar as Toolbar))
+        setSupportActionBar((adding_toolbar as Toolbar))
         supportActionBar!!.title = resources.getString(R.string.text_title_add)
 
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -65,7 +63,7 @@ class AddSellingActivity : AppCompatActivity() {
 
     private fun initEvent() {
         btn_add_to_db.setOnClickListener {
-            val loading = BaseUtil.loadingDialog(this)
+            val loading = loadingDialog(this)
             loading.show()
             val lastlocation = MapUtil.lastLocation
 

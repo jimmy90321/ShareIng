@@ -8,6 +8,8 @@ val IngredientList = mutableListOf("Apple", "Beef", "Pork")
 
 val gramList = mutableListOf("mg", "g", "kg")
 
-val soldingMap = mutableMapOf<String, MutableList<Solding>>()
+val soldingList = mutableListOf<Solding>()
+
+var filteredList = mutableListOf<Solding>()
 
 val providerMap = mutableMapOf<DocumentReference, Provider>()

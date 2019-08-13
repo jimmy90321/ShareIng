@@ -10,6 +10,6 @@ val gramList = mutableListOf("mg", "g", "kg")
 
 val soldingList = mutableListOf<Solding>()
 
-var filteredList = mutableListOf<Solding>()
+var filteredList = listOf<Solding>()
 
 val providerMap = mutableMapOf<DocumentReference, Provider>()

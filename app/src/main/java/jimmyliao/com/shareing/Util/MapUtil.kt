@@ -33,6 +33,7 @@ import java.lang.Exception
 class MapUtil {
     private lateinit var context: Context
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var clusterManager: ClusterManager<Solding>
 
     companion object {
         var lastLocation = LatLng(1.299964, 103.843337)
@@ -96,8 +97,14 @@ class MapUtil {
         setupReady(true)
     }
 
-    fun setupClusterManager(map: GoogleMap, list: MutableList<Solding>) {
-        val clusterManager = ClusterManager<Solding>(context, map)
+    fun updateCluster(map: GoogleMap, list: List<Solding>) {
+        map.clear()
+        clusterManager.clearItems()
+        setupClusterManager(map, list)
+    }
+
+    fun setupClusterManager(map: GoogleMap, list: List<Solding>) {
+        clusterManager = ClusterManager(context, map)
         clusterManager.renderer = MyClusterRender(map, clusterManager)
         clusterManager.addItems(list)
         clusterManager.cluster()

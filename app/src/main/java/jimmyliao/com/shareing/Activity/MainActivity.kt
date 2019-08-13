@@ -1,5 +1,6 @@
 package jimmyliao.com.shareing.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -21,7 +22,7 @@ import jimmyliao.com.shareing.Util.FirebaseUtil
 import jimmyliao.com.shareing.Util.MapUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), OnMapReadyCallback{
+class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
     private val mapUtil = MapUtil()
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback{
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
         const val REQUEST_LOCATION_CHECK_SETTINGS = 1001
+        const val REQUEST_FILTER = 2001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +68,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback{
             when (item.itemId) {
                 R.id.menu_filter -> {
                     Toast.makeText(this, "filter click", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, FilterActivity::class.java)
+                    startActivityForResult(intent, REQUEST_FILTER)
                 }
                 R.id.menu_favor -> {
                     Toast.makeText(this, "favor click", Toast.LENGTH_SHORT).show()
@@ -128,5 +132,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback{
                     firstUpdated = true
                 }
             })
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                REQUEST_FILTER -> {
+                    val ingredients = data?.getStringArrayListExtra(FilterActivity.KEY_INGREDIENTS)
+                    filteredList = soldingList.filter {
+                        ingredients!!.contains(it.soldingTitle?.toLowerCase())
+                    }
+                    mapUtil.updateCluster(map, filteredList)
+                }
+            }
+        }
     }
 }

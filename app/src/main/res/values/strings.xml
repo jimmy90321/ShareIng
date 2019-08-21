@@ -24,4 +24,8 @@
     <string name="text_detail_price_title">Price :</string>
     <string name="text_detail_provider_title">Provider :</string>
     <string name="text_detail_phone_title">Phone :</string>
+
+    // Filter Activity
+    <string name="text_filter_clear_all">clear all</string>
+    <string name="text_filter_select_all">select all</string>
 </resources>

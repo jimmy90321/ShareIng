@@ -61,13 +61,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val drawerHeader = sidebar.getHeaderView(0)
         val btnCloseDrawer = drawerHeader.findViewById<ImageView>(R.id.btn_close_drawer)
         btnCloseDrawer.setOnClickListener {
-            drawer.closeDrawer(Gravity.LEFT, true)
+            drawer.closeDrawer(Gravity.START, true)
         }
 
         sidebar.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menu_filter -> {
-                    Toast.makeText(this, "filter click", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, FilterActivity::class.java)
                     startActivityForResult(intent, REQUEST_FILTER)
                 }
@@ -78,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this, "login click", Toast.LENGTH_SHORT).show()
                 }
             }
+            drawer.closeDrawer(Gravity.START, true)
 
             return@setNavigationItemSelectedListener true
         }

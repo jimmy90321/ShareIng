@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.TypedValue
 import jimmyliao.com.shareing.R
 
 fun loadingDialog(context: Context): Dialog {
@@ -13,3 +14,5 @@ fun loadingDialog(context: Context): Dialog {
     dialog.setContentView(R.layout.loading_dialog)
     return dialog
 }
+
+fun Dp2Px(dp:Float,context: Context) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,dp,context.resources.displayMetrics).toInt()

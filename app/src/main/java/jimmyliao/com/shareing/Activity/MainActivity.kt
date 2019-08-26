@@ -1,7 +1,10 @@
 package jimmyliao.com.shareing.Activity
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -11,15 +14,25 @@ import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.FirebaseUtil
 import jimmyliao.com.shareing.Util.MapUtil
+import jimmyliao.com.shareing.Util.loadingDialog
+import jimmyliao.com.shareing.Util.login
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -28,8 +41,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val mapUtil = MapUtil()
     private var dataReady = false
     private var mapReady = false
+    private lateinit var auth: FirebaseAuth
 
     companion object {
+        const val TAG = "MainActivity"
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
         const val REQUEST_LOCATION_CHECK_SETTINGS = 1001
         const val REQUEST_FILTER = 2001
@@ -74,7 +89,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this, "favor click", Toast.LENGTH_SHORT).show()
                 }
                 R.id.menu_login -> {
-                    Toast.makeText(this, "login click", Toast.LENGTH_SHORT).show()
+                    login(this)
+                }
+                R.id.menu_logout -> {
+                    logout()
                 }
             }
             drawer.closeDrawer(Gravity.START, true)
@@ -84,6 +102,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initData() {
+        auth = FirebaseAuth.getInstance()
+
+        updateUI(auth.currentUser)
+
         FirebaseUtil().getCollectionData(solding_collectionName) { result ->
             result.forEach { document ->
                 val solding = Solding(
@@ -146,7 +168,51 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     mapUtil.updateCluster(map, filteredList)
                 }
+                GOOGLE_SIGN_IN -> {
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+                    try {
+                        // Google Sign In was successful, authenticate with Firebase
+                        val account = task.getResult(ApiException::class.java)
+                        firebaseAuthWithGoogle(account!!)
+                    } catch (e: ApiException) {
+                        // Google Sign In failed, update UI appropriately
+                        Log.w(TAG, "Google sign in failed", e)
+                    }
+                }
             }
         }
+    }
+
+    private fun firebaseAuthWithGoogle(acc: GoogleSignInAccount) {
+        val dialog = loadingDialog(this)
+        dialog.show()
+        val credential = GoogleAuthProvider.getCredential(acc.idToken, null)
+
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener {
+                dialog.dismiss()
+                Toast.makeText(this@MainActivity, "Login success", Toast.LENGTH_SHORT).show()
+
+                currentUser = auth.currentUser!!
+                updateUI(currentUser)
+            }
+            .addOnFailureListener {
+                dialog.dismiss()
+                Toast.makeText(this@MainActivity, "Login failed", Toast.LENGTH_SHORT).show()
+
+                Log.e(TAG, "firebase auth with google failed", it)
+            }
+    }
+
+    private fun logout() {
+        auth.signOut()
+        Toast.makeText(this@MainActivity, "Logout success", Toast.LENGTH_SHORT).show()
+        updateUI(null)
+    }
+
+    private fun updateUI(user: FirebaseUser?) {
+        sidebar.menu.findItem(R.id.menu_login).isVisible = user == null
+        sidebar.menu.findItem(R.id.menu_logout).isVisible = user != null
+        sidebar.getHeaderView(0).findViewById<TextView>(R.id.header_drawer).text = user?.email
     }
 }

@@ -1,11 +1,22 @@
 package jimmyliao.com.shareing.Util
 
+import android.app.Activity
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import jimmyliao.com.shareing.Constant.GOOGLE_SIGN_IN
 import jimmyliao.com.shareing.Constant.providerMap
 import jimmyliao.com.shareing.Constant.provider_collectionName
 import jimmyliao.com.shareing.Model.Provider
+import jimmyliao.com.shareing.R
+import kotlinx.android.synthetic.main.dialog_login.*
 import java.lang.Exception
 
 class FirebaseUtil {
@@ -58,4 +69,25 @@ class FirebaseUtil {
                 }
         }
     }
+}
+
+fun login(context: Context) {
+    val dialog = Dialog(context)
+    dialog.setCancelable(true)
+    dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+    dialog.setContentView(R.layout.dialog_login)
+    dialog.show()
+
+    dialog.btn_google_sign_in.setOnClickListener {
+        Toast.makeText(context,"Sign in clicked",Toast.LENGTH_SHORT).show()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        val googleSignInIntent = GoogleSignIn.getClient(context,gso).signInIntent
+        (context as Activity).startActivityForResult(googleSignInIntent, GOOGLE_SIGN_IN)
+        dialog.dismiss()
+    }
+
 }

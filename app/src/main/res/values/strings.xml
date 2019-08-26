@@ -10,6 +10,7 @@
     <string name="text_menu_filter_with_conditions">Filter with conditions</string>
     <string name="text_menu_favorite_sharer">Favorite sharer</string>
     <string name="text_menu_login">Log in</string>
+    <string name="text_menu_logout">Log out</string>
 
     // Add Selling Activity
     <string name="text_add_title_ingredient">Ingredient :</string>

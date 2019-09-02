@@ -104,7 +104,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun initData() {
         auth = FirebaseAuth.getInstance()
 
-        updateUI(auth.currentUser)
+        currentUser = auth.currentUser
+        updateUI(currentUser)
 
         FirebaseUtil().getCollectionData(solding_collectionName) { result ->
             result.forEach { document ->
@@ -127,6 +128,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun initEvent() {
         btn_add_solding.setOnClickListener {
+            if (MapUtil.lastLocation == null || currentUser == null) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Please turn on location service & login to share your ingredient",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, AddSellingActivity::class.java)
             startActivity(intent)
         }
@@ -206,6 +215,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun logout() {
         auth.signOut()
+        currentUser = null
         Toast.makeText(this@MainActivity, "Logout success", Toast.LENGTH_SHORT).show()
         updateUI(null)
     }

@@ -34,9 +34,10 @@ class MapUtil {
     private lateinit var context: Context
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var clusterManager: ClusterManager<Solding>
+    private val tempLocation = LatLng(1.299964, 103.843337)
 
     companion object {
-        var lastLocation = LatLng(1.299964, 103.843337)
+        var lastLocation: LatLng? = null
     }
 
     fun setupMap(
@@ -59,7 +60,7 @@ class MapUtil {
             )
             return
         } else {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 14.0f))
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, 14.0f))
 
             val locationRequest = LocationRequest.create()?.apply {
                 interval = 1 * 1000
@@ -84,8 +85,14 @@ class MapUtil {
                 override fun onLocationResult(locationResult: LocationResult?) {
                     if (locationResult != null) {
                         onLocationUpdate(locationResult.lastLocation)
-                        lastLocation =
-                                LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
+                        lastLocation = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
+                    }
+                }
+
+                override fun onLocationAvailability(p0: LocationAvailability?) {
+                    super.onLocationAvailability(p0)
+                    if(p0?.isLocationAvailable != true){
+                        lastLocation = null
                     }
                 }
             }, Looper.myLooper())
@@ -155,7 +162,7 @@ class MapUtil {
             contentView.tv_solding_price.text = item.price.toString()
 
             val soldingLocation = item.position
-            val distance = SphericalUtil.computeDistanceBetween(lastLocation, soldingLocation)
+            val distance = SphericalUtil.computeDistanceBetween(lastLocation?:tempLocation, soldingLocation)
 
             when {
                 distance < 500 -> iconFactory.setStyle(IconGenerator.STYLE_BLUE)

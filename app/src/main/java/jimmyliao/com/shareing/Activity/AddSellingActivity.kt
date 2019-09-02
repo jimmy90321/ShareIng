@@ -65,7 +65,12 @@ class AddSellingActivity : AppCompatActivity() {
         btn_add_to_db.setOnClickListener {
             val loading = loadingDialog(this)
             loading.show()
-            val lastlocation = MapUtil.lastLocation
+            if (MapUtil.lastLocation == null) {
+                loading.dismiss()
+                Toast.makeText(this@AddSellingActivity,"You must turn on location service to add new sharing",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val lastlocation = MapUtil.lastLocation!!
 
             val data = hashMapOf(
                 "amount" to et_measure.text.toString().toDouble(),

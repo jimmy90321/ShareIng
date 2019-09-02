@@ -79,7 +79,6 @@ fun login(context: Context) {
     dialog.show()
 
     dialog.btn_google_sign_in.setOnClickListener {
-        Toast.makeText(context,"Sign in clicked",Toast.LENGTH_SHORT).show()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.getString(R.string.default_web_client_id))
             .requestEmail()

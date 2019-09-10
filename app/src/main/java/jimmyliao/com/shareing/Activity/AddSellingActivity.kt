@@ -1,5 +1,6 @@
 package jimmyliao.com.shareing.Activity
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.R
@@ -63,10 +65,10 @@ class AddSellingActivity : AppCompatActivity() {
 
     private fun initEvent() {
         btn_add_to_db.setOnClickListener {
-            val loading = loadingDialog(this)
-            loading.show()
+            val loadingDialog = customDialog(this,false,R.layout.dialog_loading)
+            loadingDialog.show()
             if (MapUtil.lastLocation == null) {
-                loading.dismiss()
+                loadingDialog.dismiss()
                 Toast.makeText(this@AddSellingActivity,"You must turn on location service to add new sharing",Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -77,14 +79,15 @@ class AddSellingActivity : AppCompatActivity() {
                 "location" to GeoPoint(lastlocation.latitude, lastlocation.longitude),
                 "price" to et_price.text.toString().toDouble(),
                 "soldingTitle" to spinner_ingredient.selectedItem.toString(),
-                "unit" to (spinner_unit.selectedItem?.toString() ?: "")
+                "unit" to (spinner_unit.selectedItem?.toString() ?: ""),
+                "providerRef" to FirebaseFirestore.getInstance().collection("Provider").document(currentUser!!.uid)
             )
 
             FirebaseUtil().addData("Solding", null, data) { success, e ->
-                loading.dismiss()
+                loadingDialog.dismiss()
                 if (success) {
                     Toast.makeText(this, "create success", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
+                    setResult(Activity.RESULT_OK)
                     finish()
                 } else {
                     Log.e(TAG, e.toString())

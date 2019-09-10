@@ -29,7 +29,7 @@
 
     <TextView
             android:id="@+id/tv_detail_ingredient_title"
-            style="@style/detail_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/detail_toolbar"
             android:text="@string/text_detail_ingredient_title"/>
@@ -45,7 +45,7 @@
 
     <TextView
             android:id="@+id/tv_detail_amount_title"
-            style="@style/detail_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_ingredient"
             android:text="@string/text_detail_amount_title"/>
@@ -61,7 +61,7 @@
 
     <TextView
             android:id="@+id/tv_detail_price_title"
-            style="@style/detail_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_amount"
             android:text="@string/text_detail_price_title"/>
@@ -87,7 +87,7 @@
 
     <TextView
             android:id="@+id/tv_detail_provider_title"
-            style="@style/detail_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/iv_separator"
             android:text="@string/text_detail_provider_title"/>
@@ -103,7 +103,7 @@
 
     <TextView
             android:id="@+id/tv_detail_phone_title"
-            style="@style/detail_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_provider"
             android:text="@string/text_detail_phone_title"/>

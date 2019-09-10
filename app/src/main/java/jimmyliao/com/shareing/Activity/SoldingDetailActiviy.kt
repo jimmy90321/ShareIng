@@ -36,7 +36,7 @@ class SoldingDetailActiviy : AppCompatActivity() {
         val soldingId = intent.extras.getString(ID)
         val solding = soldingList.find { it.ref!!.id == soldingId }
 
-        FirebaseUtil().getData(provider_collectionName, solding!!.providerRef!!) {
+        FirebaseUtil().getLocalData(provider_collectionName, solding!!.providerRef!!.id) {
             val provider = it as Provider
             tv_detail_provider.text = provider.name
             tv_detail_phone.text = provider.phone

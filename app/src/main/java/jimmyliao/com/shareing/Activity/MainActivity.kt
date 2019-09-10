@@ -29,10 +29,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.Model.Solding
 import jimmyliao.com.shareing.R
-import jimmyliao.com.shareing.Util.FirebaseUtil
-import jimmyliao.com.shareing.Util.MapUtil
-import jimmyliao.com.shareing.Util.loadingDialog
-import jimmyliao.com.shareing.Util.login
+import jimmyliao.com.shareing.Util.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -48,6 +45,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1
         const val REQUEST_LOCATION_CHECK_SETTINGS = 1001
         const val REQUEST_FILTER = 2001
+        const val REQUEST_ADD_SELLING = 2002
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -126,6 +124,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun updateData(){
+        FirebaseUtil().getCollectionData(solding_collectionName) { result ->
+            result.forEach { document ->
+                val solding = Solding(
+                    document.reference, document.get(solding_amount), document.getGeoPoint(
+                        solding_location
+                    ), document.get(solding_price), document.getString(solding_title), document.getString(
+                        solding_unit
+                    ), document.getDocumentReference(solding_provider)
+                )
+                soldingList.add(solding)
+            }
+            filteredList = soldingList
+            mapUtil.updateCluster(map, filteredList)
+        }
+    }
+
     private fun initEvent() {
         btn_add_solding.setOnClickListener {
             if (MapUtil.lastLocation == null || currentUser == null) {
@@ -137,7 +152,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@setOnClickListener
             }
             val intent = Intent(this, AddSellingActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent,REQUEST_ADD_SELLING)
         }
     }
 
@@ -177,12 +192,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     mapUtil.updateCluster(map, filteredList)
                 }
+                REQUEST_ADD_SELLING->{
+                    updateData()
+                }
                 GOOGLE_SIGN_IN -> {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                     try {
                         // Google Sign In was successful, authenticate with Firebase
                         val account = task.getResult(ApiException::class.java)
-                        firebaseAuthWithGoogle(account!!)
+                        firebaseAuthWithGoogle(this, auth, account!!) {
+                            updateUI(currentUser)
+                        }
                     } catch (e: ApiException) {
                         // Google Sign In failed, update UI appropriately
                         Log.w(TAG, "Google sign in failed", e)
@@ -192,26 +212,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun firebaseAuthWithGoogle(acc: GoogleSignInAccount) {
-        val dialog = loadingDialog(this)
-        dialog.show()
-        val credential = GoogleAuthProvider.getCredential(acc.idToken, null)
-
-        auth.signInWithCredential(credential)
-            .addOnSuccessListener {
-                dialog.dismiss()
-                Toast.makeText(this@MainActivity, "Login success", Toast.LENGTH_SHORT).show()
-
-                currentUser = auth.currentUser!!
-                updateUI(currentUser)
-            }
-            .addOnFailureListener {
-                dialog.dismiss()
-                Toast.makeText(this@MainActivity, "Login failed", Toast.LENGTH_SHORT).show()
-
-                Log.e(TAG, "firebase auth with google failed", it)
-            }
-    }
+//    private fun firebaseAuthWithGoogle(acc: GoogleSignInAccount) {
+//        val dialog = customDialog(this)
+//        dialog.show()
+//        val credential = GoogleAuthProvider.getCredential(acc.idToken, null)
+//
+//        auth.signInWithCredential(credential)
+//            .addOnSuccessListener {
+//                dialog.dismiss()
+//                Toast.makeText(this@MainActivity, "Login success", Toast.LENGTH_SHORT).show()
+//
+//                currentUser = auth.currentUser!!
+//                updateUI(currentUser)
+//            }
+//            .addOnFailureListener {
+//                dialog.dismiss()
+//                Toast.makeText(this@MainActivity, "Login failed", Toast.LENGTH_SHORT).show()
+//
+//                Log.e(TAG, "firebase auth with google failed", it)
+//            }
+//    }
 
     private fun logout() {
         auth.signOut()

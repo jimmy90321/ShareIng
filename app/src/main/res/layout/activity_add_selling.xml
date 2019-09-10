@@ -29,7 +29,7 @@
 
     <TextView
             android:id="@+id/tv_title_ingredient"
-            style="@style/adding_title"
+            style="@style/app_title"
             app:layout_constraintTop_toBottomOf="@id/adding_toolbar"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             android:text="@string/text_add_title_ingredient"/>
@@ -46,7 +46,7 @@
 
     <TextView
             android:id="@+id/tv_title_measure"
-            style="@style/adding_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/tv_title_ingredient"
             android:text="@string/text_add_title_measure"/>
@@ -63,7 +63,7 @@
 
     <TextView
             android:id="@+id/tv_title_unit"
-            style="@style/adding_title"
+            style="@style/app_title"
             app:layout_constraintTop_toBottomOf="@id/tv_title_measure"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             android:text="@string/text_add_title_unit"/>
@@ -79,7 +79,7 @@
 
     <TextView
             android:id="@+id/tv_title_price"
-            style="@style/adding_title"
+            style="@style/app_title"
             app:layout_constraintStart_toStartOf="@id/guideline_field_start"
             app:layout_constraintTop_toBottomOf="@id/tv_title_unit"
             android:text="@string/text_add_title_price"/>

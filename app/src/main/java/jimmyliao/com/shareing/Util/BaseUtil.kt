@@ -7,11 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.util.TypedValue
 import jimmyliao.com.shareing.R
 
-fun loadingDialog(context: Context): Dialog {
+fun customDialog(context: Context,cancellable:Boolean,layoutId:Int): Dialog {
     val dialog = Dialog(context)
-    dialog.setCancelable(false)
+    dialog.setCancelable(cancellable)
     dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    dialog.setContentView(R.layout.dialog_loading)
+    dialog.setContentView(layoutId)
     return dialog
 }
 

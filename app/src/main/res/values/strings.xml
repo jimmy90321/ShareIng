@@ -29,4 +29,10 @@
     // Filter Activity
     <string name="text_filter_clear_all">clear all</string>
     <string name="text_filter_select_all">select all</string>
+
+    // Sign Up Dialog
+    <string name="text_sign_up_title">As first time user, \nplease enter your contact information</string>
+    <string name="text_sign_up_name">Display Name:</string>
+    <string name="text_sign_up_phone">Contact Number :</string>
+    <string name="text_sign_up_ok">OK</string>
 </resources>

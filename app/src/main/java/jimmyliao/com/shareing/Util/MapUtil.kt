@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.view.View
+import android.widget.Toast
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -43,6 +44,7 @@ class MapUtil {
     fun setupMap(
         context: Context,
         map: GoogleMap,
+        locationAvailable: (Boolean) -> Unit,
         setupReady: (Boolean) -> Unit,
         onLocationUpdate: (Location) -> Unit
     ) {
@@ -68,31 +70,22 @@ class MapUtil {
                 priority = LocationRequest.PRIORITY_HIGH_ACCURACY
             }
 
-            val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest!!)
-            val client = LocationServices.getSettingsClient(context)
-            val task = client.checkLocationSettings(builder.build())
-
-            task.addOnFailureListener {
-                if (it is ResolvableApiException) {
-                    try {
-                        it.startResolutionForResult(context as Activity, MainActivity.REQUEST_LOCATION_CHECK_SETTINGS)
-                    } catch (sendEx: IntentSender.SendIntentException) {
-                    }
-                }
-            }
-
             fusedLocationClient.requestLocationUpdates(locationRequest, object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult?) {
                     if (locationResult != null) {
                         onLocationUpdate(locationResult.lastLocation)
-                        lastLocation = LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
+                        lastLocation =
+                                LatLng(locationResult.lastLocation.latitude, locationResult.lastLocation.longitude)
                     }
                 }
 
                 override fun onLocationAvailability(p0: LocationAvailability?) {
                     super.onLocationAvailability(p0)
-                    if(p0?.isLocationAvailable != true){
+                    if (p0?.isLocationAvailable != true) {
+                        locationAvailable.invoke(false)
                         lastLocation = null
+                    } else {
+                        locationAvailable.invoke(true)
                     }
                 }
             }, Looper.myLooper())
@@ -162,7 +155,7 @@ class MapUtil {
             contentView.tv_solding_price.text = item.price.toString()
 
             val soldingLocation = item.position
-            val distance = SphericalUtil.computeDistanceBetween(lastLocation?:tempLocation, soldingLocation)
+            val distance = SphericalUtil.computeDistanceBetween(lastLocation ?: tempLocation, soldingLocation)
 
             when {
                 distance < 500 -> iconFactory.setStyle(IconGenerator.STYLE_BLUE)

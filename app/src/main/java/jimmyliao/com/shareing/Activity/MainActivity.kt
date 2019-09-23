@@ -35,10 +35,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
-    private val mapUtil = MapUtil()
+    private lateinit var mapUtil: MapUtil
     private var dataReady = false
     private var mapReady = false
     private lateinit var auth: FirebaseAuth
+    private lateinit var locationDialog: Dialog
 
     companion object {
         const val TAG = "MainActivity"
@@ -51,6 +52,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        mapUtil = MapUtil()
+
+        locationDialog = Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+        locationDialog.setContentView(R.layout.dialog_location_service_cover)
+        locationDialog.show()
 
         setToolBar()
 
@@ -124,7 +131,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun updateData(){
+    private fun updateData() {
         FirebaseUtil().getCollectionData(solding_collectionName) { result ->
             result.forEach { document ->
                 val solding = Solding(
@@ -152,7 +159,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 return@setOnClickListener
             }
             val intent = Intent(this, AddSellingActivity::class.java)
-            startActivityForResult(intent,REQUEST_ADD_SELLING)
+            startActivityForResult(intent, REQUEST_ADD_SELLING)
         }
     }
 
@@ -164,6 +171,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         map.uiSettings.isMapToolbarEnabled = false
 
         mapUtil.setupMap(this@MainActivity, map,
+            locationAvailable = { available ->
+                if (available) {
+                    locationDialog.dismiss()
+                } else {
+                    locationDialog.show()
+                }
+            },
             setupReady = {
                 mapReady = it
                 if (mapReady && dataReady) {
@@ -192,7 +206,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     mapUtil.updateCluster(map, filteredList)
                 }
-                REQUEST_ADD_SELLING->{
+                REQUEST_ADD_SELLING -> {
                     updateData()
                 }
                 GOOGLE_SIGN_IN -> {

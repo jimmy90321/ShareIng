@@ -35,4 +35,6 @@
     <string name="text_sign_up_name">Display Name:</string>
     <string name="text_sign_up_phone">Contact Number :</string>
     <string name="text_sign_up_ok">OK</string>
+
+    <string name="location_cover_fragment">To use this product, please turn on your location service. </string>
 </resources>

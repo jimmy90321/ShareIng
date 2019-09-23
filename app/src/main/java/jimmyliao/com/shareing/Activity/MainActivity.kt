@@ -99,6 +99,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 R.id.menu_logout -> {
                     logout()
                 }
+                R.id.menu_to_intro -> {
+                    startActivity(Intent(this, IntroActivity::class.java))
+                }
             }
             drawer.closeDrawer(Gravity.START, true)
 

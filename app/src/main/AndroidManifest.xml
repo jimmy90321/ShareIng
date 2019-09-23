@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".Activity.FilterActivity">
         </activity>
+        <activity android:name=".Activity.IntroActivity">
+        </activity>
     </application>
 
 </manifest>

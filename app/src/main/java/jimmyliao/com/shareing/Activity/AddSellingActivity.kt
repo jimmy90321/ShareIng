@@ -17,6 +17,7 @@ import jimmyliao.com.shareing.Constant.*
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.*
 import kotlinx.android.synthetic.main.activity_add_selling.*
+import java.util.Calendar
 
 class AddSellingActivity : AppCompatActivity() {
 
@@ -80,7 +81,8 @@ class AddSellingActivity : AppCompatActivity() {
                 "price" to et_price.text.toString().toDouble(),
                 "soldingTitle" to spinner_ingredient.selectedItem.toString(),
                 "unit" to (spinner_unit.selectedItem?.toString() ?: ""),
-                "providerRef" to FirebaseFirestore.getInstance().collection("Provider").document(currentUser!!.uid)
+                "providerRef" to FirebaseFirestore.getInstance().collection("Provider").document(currentUser!!.uid),
+                "postTime" to Calendar.getInstance().time
             )
 
             FirebaseUtil().addData("Solding", null, data) { success, e ->

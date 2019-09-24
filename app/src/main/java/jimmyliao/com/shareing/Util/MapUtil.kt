@@ -119,7 +119,7 @@ class MapUtil {
             val bounds = builder.build()
 
             try {
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 10))
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -158,8 +158,8 @@ class MapUtil {
             val distance = SphericalUtil.computeDistanceBetween(lastLocation ?: tempLocation, soldingLocation)
 
             when {
-                distance < 500 -> iconFactory.setStyle(IconGenerator.STYLE_BLUE)
-                distance > 1000 -> iconFactory.setStyle(IconGenerator.STYLE_RED)
+                distance < 1000 -> iconFactory.setStyle(IconGenerator.STYLE_BLUE)
+                distance > 5000 -> iconFactory.setStyle(IconGenerator.STYLE_RED)
                 else -> iconFactory.setStyle(IconGenerator.STYLE_ORANGE)
             }
 

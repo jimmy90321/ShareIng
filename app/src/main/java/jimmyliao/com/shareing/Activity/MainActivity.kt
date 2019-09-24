@@ -118,11 +118,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         FirebaseUtil().getCollectionData(solding_collectionName) { result ->
             result.forEach { document ->
                 val solding = Solding(
-                    document.reference, document.get(solding_amount), document.getGeoPoint(
-                        solding_location
-                    ), document.get(solding_price), document.getString(solding_title), document.getString(
-                        solding_unit
-                    ), document.getDocumentReference(solding_provider)
+                    document.reference,
+                    document.get(solding_amount),
+                    document.getGeoPoint(solding_location),
+                    document.get(solding_price),
+                    document.getString(solding_title),
+                    document.getString(solding_unit),
+                    document.getDocumentReference(solding_provider),
+                    document.getTimestamp(solding_postTime)
                 )
                 soldingList.add(solding)
             }

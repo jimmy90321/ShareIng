@@ -1,9 +1,11 @@
 package jimmyliao.com.shareing.Model
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.GeoPoint
 import com.google.maps.android.clustering.ClusterItem
+import java.util.*
 
 data class Solding(
     val ref: DocumentReference? = null,
@@ -12,7 +14,8 @@ data class Solding(
     val price: Any? = null,
     val soldingTitle: String? = null,
     val unit: String? = null,
-    val providerRef: DocumentReference? = null
+    val providerRef: DocumentReference? = null,
+    val postTime: Timestamp? = null
 ) : ClusterItem {
     override fun getSnippet(): String? {
         return null

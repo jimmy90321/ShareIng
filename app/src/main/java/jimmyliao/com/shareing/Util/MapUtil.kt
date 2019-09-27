@@ -24,6 +24,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
+import jimmyliao.com.shareing.Activity.ClusterListActivity
 import jimmyliao.com.shareing.Activity.MainActivity
 import jimmyliao.com.shareing.Activity.SoldingDetailActiviy
 import jimmyliao.com.shareing.Model.Solding
@@ -112,18 +113,31 @@ class MapUtil {
         map.setOnMarkerClickListener(clusterManager)
 
         clusterManager.setOnClusterClickListener {
-            val builder = LatLngBounds.builder()
+            if (map.cameraPosition.zoom != map.maxZoomLevel) {
+                val builder = LatLngBounds.builder()
+                for (item in it.items) {
+                    builder.include(item.position)
+                }
+                val bounds = builder.build()
+
+                try {
+                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                return@setOnClusterClickListener true
+            }
+
+            val bundle = Bundle()
+            val idList = ArrayList<String>()
             for (item in it.items) {
-                builder.include(item.position)
+                idList.add(item.ref!!.id)
             }
-            val bounds = builder.build()
-
-            try {
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
+            bundle.putStringArrayList(ClusterListActivity.LIST, idList)
+            val intent = Intent(context, ClusterListActivity::class.java)
+            intent.putExtras(bundle)
+            context.startActivity(intent)
             return@setOnClusterClickListener true
         }
 

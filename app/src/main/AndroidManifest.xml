@@ -34,6 +34,8 @@
         </activity>
         <activity android:name=".Activity.IntroActivity">
         </activity>
+        <activity android:name=".Activity.ClusterListActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -6,30 +6,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import jimmyliao.com.shareing.Model.Solding
-import jimmyliao.com.shareing.R
 import kotlinx.android.synthetic.main.item_solding_list.view.*
 
-class ListItemAdapter(val context: Context, val data: List<Solding>) :
+class ListItemAdapter(
+    val context: Context,
+    val data: List<Solding>,
+    val layoutId: Int,
+    val onItemClickListener: ((String) -> Unit)? = {}
+) :
     RecyclerView.Adapter<ListItemAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_solding_list, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(layoutId, parent, false))
     }
 
     override fun getItemCount() = data.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setData(data[position])
+        holder.bind(data[position], onItemClickListener)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun setData(item:Solding){
+        fun bind(item: Solding, itemClickListener: ((id:String) -> Unit)?) {
             itemView.tv_item_list_title.text = item.soldingTitle
             val amount = "${item.amount} ${item.unit}"
             itemView.tv_item_list_amount.text = amount
             val price = "S$ ${item.price}"
             itemView.tv_item_list_price.text = price
+
+            if (itemClickListener != {}) {
+                itemView.setOnClickListener {
+                    itemClickListener!!.invoke(item.ref!!.id)
+                }
+            }
         }
     }
 

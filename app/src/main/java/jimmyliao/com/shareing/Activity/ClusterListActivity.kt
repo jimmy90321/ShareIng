@@ -1,5 +1,6 @@
 package jimmyliao.com.shareing.Activity
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -31,13 +32,18 @@ class ClusterListActivity : AppCompatActivity() {
         clusterList = soldingList.filter {
             idList.indexOf(it.ref?.id) > -1
         }
-
-        Log.d("ClusterList", "$clusterList")
     }
 
     private fun initRecycler() {
         recycler_cluster_list.layoutManager = GridLayoutManager(this, 2)
-        val adapter = ListItemAdapter(this, clusterList)
+        val adapter = ListItemAdapter(this, clusterList,R.layout.item_cluster_list,
+            onItemClickListener = {id->
+                val bundle = Bundle()
+                bundle.putString(SoldingDetailActiviy.ID, id)
+                val intent = Intent(this@ClusterListActivity, SoldingDetailActiviy::class.java)
+                intent.putExtras(bundle)
+                startActivity(intent)
+            })
 
         recycler_cluster_list.adapter = adapter
     }

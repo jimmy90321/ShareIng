@@ -34,13 +34,13 @@ class IntroActivity : AppCompatActivity() {
         val latest = soldingList.sortedByDescending {
             it.postTime?.seconds
         }
-        latestAdapter = ListItemAdapter(this, latest.subList(0, endIndex(latest)))
+        latestAdapter = ListItemAdapter(this, latest.subList(0, endIndex(latest)),R.layout.item_solding_list)
         recycler_latest_coming.adapter = latestAdapter
 
         val nearby = soldingList.sortedBy {
             SphericalUtil.computeDistanceBetween(lastLocation, it.position)
         }
-        nearbyAdapter = ListItemAdapter(this, nearby.subList(0,endIndex(nearby)))
+        nearbyAdapter = ListItemAdapter(this, nearby.subList(0,endIndex(nearby)),R.layout.item_solding_list)
         recycler_nearby.adapter = nearbyAdapter
     }
 

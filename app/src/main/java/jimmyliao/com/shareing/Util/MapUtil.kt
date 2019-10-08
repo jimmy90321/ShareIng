@@ -3,15 +3,12 @@ package jimmyliao.com.shareing.Util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.support.v4.app.ActivityCompat
 import android.view.View
-import android.widget.Toast
-import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,7 +24,7 @@ import com.google.maps.android.ui.IconGenerator
 import jimmyliao.com.shareing.Activity.ClusterListActivity
 import jimmyliao.com.shareing.Activity.MainActivity
 import jimmyliao.com.shareing.Activity.SoldingDetailActiviy
-import jimmyliao.com.shareing.Model.Solding
+import jimmyliao.com.shareing.Model.Selling
 import jimmyliao.com.shareing.R
 import kotlinx.android.synthetic.main.marker_solding.view.*
 import java.lang.Exception
@@ -35,7 +32,7 @@ import java.lang.Exception
 class MapUtil {
     private lateinit var context: Context
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var clusterManager: ClusterManager<Solding>
+    private lateinit var clusterManager: ClusterManager<Selling>
     private val tempLocation = LatLng(1.299964, 103.843337)
 
     companion object {
@@ -98,13 +95,13 @@ class MapUtil {
         setupReady(true)
     }
 
-    fun updateCluster(map: GoogleMap, list: List<Solding>) {
+    fun updateCluster(map: GoogleMap, list: List<Selling>) {
         map.clear()
         clusterManager.clearItems()
         setupClusterManager(map, list)
     }
 
-    fun setupClusterManager(map: GoogleMap, list: List<Solding>) {
+    fun setupClusterManager(map: GoogleMap, list: List<Selling>) {
         clusterManager = ClusterManager(context, map)
         clusterManager.renderer = MyClusterRender(map, clusterManager)
         clusterManager.addItems(list)
@@ -152,8 +149,8 @@ class MapUtil {
         }
     }
 
-    private inner class MyClusterRender(map: GoogleMap, clusterManager: ClusterManager<Solding>) :
-        DefaultClusterRenderer<Solding>(context, map, clusterManager) {
+    private inner class MyClusterRender(map: GoogleMap, clusterManager: ClusterManager<Selling>) :
+        DefaultClusterRenderer<Selling>(context, map, clusterManager) {
 
         val iconFactory = IconGenerator(context)
         val contentView: View = (context as Activity).layoutInflater.inflate(R.layout.marker_solding, null)
@@ -162,7 +159,7 @@ class MapUtil {
             iconFactory.setContentView(contentView)
         }
 
-        override fun onBeforeClusterItemRendered(item: Solding?, markerOptions: MarkerOptions?) {
+        override fun onBeforeClusterItemRendered(item: Selling?, markerOptions: MarkerOptions?) {
             contentView.tv_solding_title.text = item!!.soldingTitle
             contentView.tv_solding_amount.text = item.amount.toString()
             contentView.tv_solding_unit.text = item.unit
@@ -180,7 +177,7 @@ class MapUtil {
             markerOptions!!.icon(BitmapDescriptorFactory.fromBitmap(iconFactory.makeIcon()))
         }
 
-        override fun shouldRenderAsCluster(cluster: Cluster<Solding>?): Boolean {
+        override fun shouldRenderAsCluster(cluster: Cluster<Selling>?): Boolean {
             return cluster!!.size > 1
         }
     }

@@ -4,15 +4,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.util.Log
 import jimmyliao.com.shareing.Adapter.ListItemAdapter
-import jimmyliao.com.shareing.Constant.soldingList
-import jimmyliao.com.shareing.Model.Solding
+import jimmyliao.com.shareing.Constant.sellingList
+import jimmyliao.com.shareing.Model.Selling
 import jimmyliao.com.shareing.R
 import kotlinx.android.synthetic.main.activity_cluster_list.*
 
 class ClusterListActivity : AppCompatActivity() {
-    private var clusterList = listOf<Solding>()
+    private var clusterList = listOf<Selling>()
 
     companion object {
         const val LIST = "cluster list"
@@ -29,8 +28,8 @@ class ClusterListActivity : AppCompatActivity() {
     private fun initData() {
         val idList = intent.extras.getStringArrayList(LIST)
 
-        clusterList = soldingList.filter {
-            idList.indexOf(it.ref?.id) > -1
+        clusterList = sellingList.filter {
+            idList.indexOf(it.ref?.id) > -1  //exist in clusterList
         }
     }
 

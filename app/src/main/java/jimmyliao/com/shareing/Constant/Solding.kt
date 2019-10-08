@@ -1,10 +1,10 @@
 package jimmyliao.com.shareing.Constant
 
-val solding_collectionName = "Solding"
-val solding_title = "soldingTitle"
-val solding_amount = "amount"
-val solding_unit = "unit"
-val solding_location = "location"
-val solding_provider = "providerRef"
-val solding_price = "price"
-val solding_postTime = "postTime"
+const val selling_collectionName = "Selling"
+const val selling_title = "soldingTitle"
+const val selling_amount = "amount"
+const val selling_unit = "unit"
+const val selling_location = "location"
+const val selling_provider = "providerRef"
+const val selling_price = "price"
+const val selling_postTime = "postTime"

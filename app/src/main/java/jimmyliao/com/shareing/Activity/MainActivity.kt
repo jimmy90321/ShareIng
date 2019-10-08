@@ -3,31 +3,23 @@ package jimmyliao.com.shareing.Activity
 import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Gravity
-import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthCredential
-import com.google.firebase.auth.GoogleAuthProvider
 import jimmyliao.com.shareing.Constant.*
-import jimmyliao.com.shareing.Model.Solding
+import jimmyliao.com.shareing.Model.Selling
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -113,23 +105,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         auth = FirebaseAuth.getInstance()
 
         currentUser = auth.currentUser
-        updateUI(currentUser)
+        updateDrawer(currentUser)
 
-        FirebaseUtil().getCollectionData(solding_collectionName) { result ->
+        FirebaseUtil().getCollectionData(selling_collectionName) { result ->
             result.forEach { document ->
-                val solding = Solding(
+                val selling = Selling(
                     document.reference,
-                    document.get(solding_amount),
-                    document.getGeoPoint(solding_location),
-                    document.get(solding_price),
-                    document.getString(solding_title),
-                    document.getString(solding_unit),
-                    document.getDocumentReference(solding_provider),
-                    document.getTimestamp(solding_postTime)
+                    document.get(selling_amount),
+                    document.getGeoPoint(selling_location),
+                    document.get(selling_price),
+                    document.getString(selling_title),
+                    document.getString(selling_unit),
+                    document.getDocumentReference(selling_provider),
+                    document.getTimestamp(selling_postTime)
                 )
-                soldingList.add(solding)
+                sellingList.add(selling)
             }
-            filteredList = soldingList
+            filteredList = sellingList
             dataReady = true
             if (mapReady) {
                 mapUtil.setupClusterManager(map, filteredList)
@@ -138,18 +130,20 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun updateData() {
-        FirebaseUtil().getCollectionData(solding_collectionName) { result ->
+        FirebaseUtil().getCollectionData(selling_collectionName) { result ->
             result.forEach { document ->
-                val solding = Solding(
-                    document.reference, document.get(solding_amount), document.getGeoPoint(
-                        solding_location
-                    ), document.get(solding_price), document.getString(solding_title), document.getString(
-                        solding_unit
-                    ), document.getDocumentReference(solding_provider)
+                val selling = Selling(
+                    document.reference,
+                    document.get(selling_amount),
+                    document.getGeoPoint(selling_location),
+                    document.get(selling_price),
+                    document.getString(selling_title),
+                    document.getString(selling_unit),
+                    document.getDocumentReference(selling_provider)
                 )
-                soldingList.add(solding)
+                if (sellingList.indexOf(selling) == -1) sellingList.add(selling)
             }
-            filteredList = soldingList
+            filteredList = sellingList
             mapUtil.updateCluster(map, filteredList)
         }
     }
@@ -207,7 +201,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             when (requestCode) {
                 REQUEST_FILTER -> {
                     val ingredients = data?.getStringArrayListExtra(FilterActivity.KEY_INGREDIENTS)
-                    filteredList = soldingList.filter {
+                    filteredList = sellingList.filter {
                         ingredients!!.contains(it.soldingTitle?.toLowerCase())
                     }
                     mapUtil.updateCluster(map, filteredList)
@@ -221,7 +215,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                         // Google Sign In was successful, authenticate with Firebase
                         val account = task.getResult(ApiException::class.java)
                         firebaseAuthWithGoogle(this, auth, account!!) {
-                            updateUI(currentUser)
+                            updateDrawer(currentUser)
                         }
                     } catch (e: ApiException) {
                         // Google Sign In failed, update UI appropriately
@@ -232,35 +226,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-//    private fun firebaseAuthWithGoogle(acc: GoogleSignInAccount) {
-//        val dialog = customDialog(this)
-//        dialog.show()
-//        val credential = GoogleAuthProvider.getCredential(acc.idToken, null)
-//
-//        auth.signInWithCredential(credential)
-//            .addOnSuccessListener {
-//                dialog.dismiss()
-//                Toast.makeText(this@MainActivity, "Login success", Toast.LENGTH_SHORT).show()
-//
-//                currentUser = auth.currentUser!!
-//                updateUI(currentUser)
-//            }
-//            .addOnFailureListener {
-//                dialog.dismiss()
-//                Toast.makeText(this@MainActivity, "Login failed", Toast.LENGTH_SHORT).show()
-//
-//                Log.e(TAG, "firebase auth with google failed", it)
-//            }
-//    }
-
     private fun logout() {
         auth.signOut()
         currentUser = null
         Toast.makeText(this@MainActivity, "Logout success", Toast.LENGTH_SHORT).show()
-        updateUI(null)
+        updateDrawer(null)
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateDrawer(user: FirebaseUser?) {
         sidebar.menu.findItem(R.id.menu_login).isVisible = user == null
         sidebar.menu.findItem(R.id.menu_logout).isVisible = user != null
         sidebar.getHeaderView(0).findViewById<TextView>(R.id.header_drawer).text = user?.email

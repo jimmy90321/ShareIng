@@ -7,7 +7,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.maps.android.clustering.ClusterItem
 import java.util.*
 
-data class Solding(
+data class Selling(
     val ref: DocumentReference? = null,
     val amount: Any? = null,
     val location: GeoPoint? = null,

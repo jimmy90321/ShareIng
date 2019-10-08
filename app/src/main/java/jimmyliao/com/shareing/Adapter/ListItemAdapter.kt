@@ -5,12 +5,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import jimmyliao.com.shareing.Model.Solding
+import jimmyliao.com.shareing.Model.Selling
 import kotlinx.android.synthetic.main.item_solding_list.view.*
 
 class ListItemAdapter(
     val context: Context,
-    val data: List<Solding>,
+    val data: List<Selling>,
     val layoutId: Int,
     val onItemClickListener: ((String) -> Unit)? = {}
 ) :
@@ -28,7 +28,7 @@ class ListItemAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Solding, itemClickListener: ((id:String) -> Unit)?) {
+        fun bind(item: Selling, itemClickListener: ((id:String) -> Unit)?) {
             itemView.tv_item_list_title.text = item.soldingTitle
             val amount = "${item.amount} ${item.unit}"
             itemView.tv_item_list_amount.text = amount

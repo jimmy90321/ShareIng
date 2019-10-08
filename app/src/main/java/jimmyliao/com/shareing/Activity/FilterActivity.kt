@@ -10,16 +10,14 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.text.InputType
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import jimmyliao.com.shareing.Adapter.FilterAdapter
-import jimmyliao.com.shareing.Constant.soldingList
+import jimmyliao.com.shareing.Constant.sellingList
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.Dp2Px
 import kotlinx.android.synthetic.main.activity_filter.*
-import kotlinx.android.synthetic.main.activity_solding_detail.*
 
 class FilterActivity : AppCompatActivity() {
     private val TAG = "FilterActivity"
@@ -49,7 +47,7 @@ class FilterActivity : AppCompatActivity() {
         recycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
         val titles = mutableListOf<String>()
-        soldingList.forEach {
+        sellingList.forEach {
             if (titles.indexOf(it.soldingTitle!!.toLowerCase()) == -1) {
                 titles.add(it.soldingTitle.toLowerCase())
             }

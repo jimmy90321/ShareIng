@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import jimmyliao.com.shareing.Constant.provider_collectionName
-import jimmyliao.com.shareing.Constant.soldingList
+import jimmyliao.com.shareing.Constant.sellingList
 import jimmyliao.com.shareing.Model.Provider
 import jimmyliao.com.shareing.R
 import jimmyliao.com.shareing.Util.FirebaseUtil
@@ -34,7 +34,7 @@ class SoldingDetailActiviy : AppCompatActivity() {
 
     private fun initData() {
         val soldingId = intent.extras.getString(ID)
-        val solding = soldingList.find { it.ref!!.id == soldingId }
+        val solding = sellingList.find { it.ref!!.id == soldingId }
 
         FirebaseUtil().getLocalData(provider_collectionName, solding!!.providerRef!!.id) {
             val provider = it as Provider

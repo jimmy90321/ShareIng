@@ -85,7 +85,7 @@ class AddSellingActivity : AppCompatActivity() {
                 "postTime" to Calendar.getInstance().time
             )
 
-            FirebaseUtil().addData("Solding", null, data) { success, e ->
+            FirebaseUtil().addData("Selling", null, data) { success, e ->
                 loadingDialog.dismiss()
                 if (success) {
                     Toast.makeText(this, "create success", Toast.LENGTH_SHORT).show()
